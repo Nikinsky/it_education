@@ -1,44 +1,63 @@
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from django.contrib import admin
 from .models import *
 
 
-class KeysInline(admin.TabularInline):
+
+
+class KeysInline(TranslationTabularInline,admin.TabularInline):
     model = Keys
     extra = 1
 
 
-class Keys2Inline(admin.TabularInline):
+class Keys2Inline(TranslationTabularInline,admin.TabularInline):
     model = Keys2
     extra = 1
 
-class StatyaAdmin(admin.ModelAdmin):
-    inlines = [KeysInline,Keys2Inline]
-    list_display = ('title', 'date')
-    search_fields = ('title',)
 
-class WhoForCoursInline(admin.TabularInline):
+@admin.register(Statya)
+class StatyaAdmin(TranslationAdmin):
+    inlines = [KeysInline, Keys2Inline]
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
+class WhoForCoursInline(TranslationTabularInline, admin.TabularInline):
     model = WhoForCours
     extra = 1
 
-class YouLearnInline(admin.TabularInline):
+class YouLearnInline(TranslationTabularInline,admin.TabularInline):
     model = YouLearn
     extra = 1
 
-class ModuleInline(admin.TabularInline):
+class ModuleInline(TranslationTabularInline,admin.TabularInline):
     model = Module
     extra = 1
 
-class CoursAdmin(admin.ModelAdmin):
+@admin.register(Cours)
+class CourseAdmin(TranslationAdmin):
     inlines = [WhoForCoursInline, YouLearnInline, ModuleInline]
-    list_display = ('title', 'price', 'dostup_course')
-    search_fields = ('title',)
-    list_filter = ('dostup_course',)
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
-class MaterialsInline(admin.TabularInline):
+class MaterialsInline(TranslationTabularInline,admin.TabularInline):
     model = Materials
     extra = 1
 
-class ProgrammaMasterClassInline(admin.TabularInline):
+class ProgrammaMasterClassInline(TranslationTabularInline,admin.TabularInline):
     model = ProgrammaMasterClass
     extra = 1
 
@@ -46,18 +65,39 @@ class ProcessInline(admin.TabularInline):
     model = Process
     extra = 1
 
-class MasterClassAdmin(admin.ModelAdmin):
+
+@admin.register(MasterClass)
+class MasterClassAdmin(TranslationAdmin):
     inlines = [MaterialsInline, ProgrammaMasterClassInline, ProcessInline]
-    list_display = ('title', 'price', 'dostup')
-    search_fields = ('title',)
-    list_filter = ('dostup',)
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
-class FeedBackAdmin(admin.ModelAdmin):
-    list_display = ('client_name', 'date')
-    search_fields = ('client_name',)
-    list_filter = ('date',)
 
-admin.site.register(Statya, StatyaAdmin)
-admin.site.register(Cours, CoursAdmin)
-admin.site.register(MasterClass, MasterClassAdmin)
-admin.site.register(FeedBack, FeedBackAdmin)
+@admin.register(FeedBack)
+class FeedbackAdmin(TranslationAdmin):
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
+# class FeedBackAdmin(admin.ModelAdmin):
+#     list_display = ('client_name', 'date')
+#     search_fields = ('client_name',)
+#     list_filter = ('date',)
+
+# admin.site.register(Statya, StatyaAdmin)
+# admin.site.register(Cours, CourseAdmin)
+# admin.site.register(MasterClass, MasterClassAdmin)
+# admin.site.register(FeedBack, FeedBackAdmin)
