@@ -125,7 +125,6 @@ class TariffListSerializer(serializers.ModelSerializer):
 
 
 class TariffForCartSerializer(serializers.ModelSerializer):
-    tariff_info = TariffInfoSerializer(many=True, read_only=True)
     class Meta:
         model = Tariff
         fields = ['term_status', 'status', 'sum',]
@@ -217,7 +216,7 @@ class CoursDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cours
         fields = ['id', 'title', 'description','into_course', 'description1', 'description2', 'description3', 'price', 'dostup_course',
-                  'modul', 'material', 'description4', 'description5', 'image_prepod',
+                 'description4', 'description5', 'image_prepod',
                   'full_name', 'position', 'who_for_course', 'you_learns', 'modules', 'course_pl']
 
 
@@ -225,7 +224,7 @@ class CoursDetailSerializer(serializers.ModelSerializer):
 class CoursListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cours
-        fields = ['id', 'title', 'about_description']
+        fields = ['id', 'title', 'description']
 
 
 
@@ -258,7 +257,7 @@ class MasterClassDetailSerializer(serializers.ModelSerializer):
     master_classes = ProcessSerializer(many=True, read_only=True)
     class Meta:
         model = MasterClass
-        fields = ['id', 'title', 'description', 'dostup', 'into_master', 'count_lesson', 'price', 'description_about_master_class',
+        fields = ['id', 'title', 'description', 'dostup', 'count_lesson', 'price', 'description_about_master_class',
                   'image_master', 'position', 'description_process', 'materials', 'programma_master_classes', 'master_classes']
 
 

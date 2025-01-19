@@ -48,15 +48,13 @@ class UserProfile(AbstractUser):
 
 class VisaCart(models.Model):
     user = models.ForeignKey(UserProfile, related_name='visa_carts', on_delete=models.CASCADE)
-    number_cart = (models.CharField
-                   (max_length=16,
+    number_cart = models.CharField(max_length=16,
                     validators=[
                         RegexValidator(r'\d{16}$', message="Введите все цифры карты")
                     ],
                     help_text="Введите номер банковской карты")
-                   )
     graduation_date = models.DateField()
-    csv = models.IntegerField(max_length=4)
+    csv = models.CharField(max_length=4)
 
     def __str__(self):
         return f"{self.user} - {self.number_cart}"
