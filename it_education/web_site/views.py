@@ -150,42 +150,6 @@ class LogoutView(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-#
-# class ResetPasswordView(generics.GenericAPIView):
-#     """Сброс пароля"""
-#     serializer_class = ResetPasswordSerializer
-#     permission_classes = [AllowAny]
-#
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         email = serializer.validated_data['email']
-#
-#         try:
-#             user = UserProfile.objects.get(email=email)
-#         except UserProfile.DoesNotExist:
-#             return Response(
-#                 {"error": "User with this email does not exist."},
-#                 status=status.HTTP_404_NOT_FOUND,
-#             )
-#
-#         new_password = UserProfile.objects.make_random_password()
-#         user.set_password(new_password)
-#         user.save()
-#
-#         send_mail(
-#             'Password Reset',
-#             f'Your new password is: {new_password}',
-#             'no-reply@example.com',
-#             [email],
-#             fail_silently=False,
-#         )
-#
-#         return Response(
-#             {"message": "A new password has been sent to your email."},
-#             status=status.HTTP_200_OK,
-#         )
-
 
 
 class ResetPasswordRequestView(generics.CreateAPIView):
@@ -236,37 +200,67 @@ class ResetPasswordConfirmView(generics.GenericAPIView):
 
 
 
+
+
+
+
+
+
+
+class UserProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+
+class VisaCartListView(generics.ListCreateAPIView):
+    queryset = VisaCart.objects.all()
+    serializer_class = VisaCartSerializer
+
+class TariffView(generics.ListCreateAPIView):
+    queryset = Tariff.objects.all()
+    serializer_class = TariffListSerializer
+
+
+
+
 class StatyaListView(generics.ListAPIView):
     queryset = Statya.objects.all()
     serializer_class = StatyaListSerializer
 
-class StatyaDetailView(generics.RetrieveAPIView):
+
+class StatyaPosleDetailView(generics.RetrieveAPIView):
     queryset = Statya.objects.all()
-    serializer_class = StatyaDetailSerializer
+    serializer_class = StatyaPosleSerializer
+
+class StatyDoaDetailView(generics.RetrieveAPIView):
+    queryset = Statya.objects.all()
+    serializer_class = StatyaDoSerializer
 
 class CoursListView(generics.ListAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursListSerializer
 
+
 class CoursDetailView(generics.RetrieveAPIView):
     queryset = Cours.objects.all()
     serializer_class = CoursDetailSerializer
+
 
 class MasterClassListView(generics.ListAPIView):
     queryset = MasterClass.objects.all()
     serializer_class = MasterClassListSerializer
 
+
 class MasterClassDetailView(generics.RetrieveAPIView):
     queryset = MasterClass.objects.all()
     serializer_class = MasterClassDetailSerializer
 
-# class FeedBackListView(generics.ListAPIView):
-#     queryset = FeedBack.objects.all()
-#     serializer_class = FeedBackSerializer
-#
-# class FeedBackDetailView(generics.RetrieveAPIView):
-#     queryset = FeedBack.objects.all()
-#     serializer_class = FeedBackSerializer
+
+class FeedBackListView(generics.ListAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedBackSerializer
+
+
 
 
 class CartItemViewSet(generics.ListCreateAPIView):
@@ -274,10 +268,14 @@ class CartItemViewSet(generics.ListCreateAPIView):
     serializer_class = CartItemSerializer
 
 
-
 class CartViewSet(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    #
+
     # def get_queryset(self):
     #     return Cart.objects.filter(user__id=self.request.user.id)
+
+
+class PodpiskiUserView(generics.ListCreateAPIView):
+    queryset = PodpiskiUser.objects.all()
+    serializer_class = PodpiskiSerializer

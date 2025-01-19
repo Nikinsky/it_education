@@ -65,6 +65,7 @@ class ResetPasswordEmailSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Пользователь с таким email не найден.")
         return value
 
+
 class ResetPasswordConfirmSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True, max_length=16, min_length=8)
 
@@ -74,6 +75,60 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError("Пароль должен содержать не менее 8 символов.")
         return value
 
+
+
+
+
+
+
+class UserProfileFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'image']
+
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['fio', 'image', 'phone_number', 'gender_status', 'birthday', 'country', 'city', 'position' ]
+
+
+
+
+class VisaCartSerializer(serializers.ModelSerializer):
+    graduation_date = serializers.DateField(format=('%M-%Y'))
+    class Meta:
+        model = VisaCart
+        fields = ['number_cart', 'graduation_date',]
+
+
+class VisaCartPodpiskiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VisaCart
+        fields = ['number_cart',]
+
+
+class TariffInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TariffInfo
+        fields = ['id', 'info']
+
+
+
+class TariffListSerializer(serializers.ModelSerializer):
+    tariff_info = TariffInfoSerializer(many=True, read_only=True)
+    class Meta:
+        model = Tariff
+        fields = ['id', 'term_status', 'sum', 'tariff_pay', 'tariff_info']
+
+
+
+class TariffForCartSerializer(serializers.ModelSerializer):
+    tariff_info = TariffInfoSerializer(many=True, read_only=True)
+    class Meta:
+        model = Tariff
+        fields = ['term_status', 'status', 'sum',]
 
 
 
@@ -98,13 +153,30 @@ class StatyaListSerializer(serializers.ModelSerializer):
         model = Statya
         fields = ['id', 'title', 'date', 'image']
 
-class StatyaDetailSerializer(serializers.ModelSerializer):
+class StatyaPosleSerializer(serializers.ModelSerializer):
     keys_statya = KeysSerializer(many=True, read_only=True)
     keys_statya2 = Keys2Serializer(many=True, read_only=True)
 
     class Meta:
         model = Statya
-        fields = ['id', 'title', 'date', 'image', 'description1', 'description2', 'keys_statya','keys_statya2']
+        fields = ['id', 'title', 'description',  'date', 'image', 'keys_statya','description1', 'description2', 'description3', 'keys_statya2']
+
+class StatyaDoSerializer(serializers.ModelSerializer):
+    keys_statya = KeysSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Statya
+        fields = ['id', 'title', 'description',  'date', 'image', 'for_key_description', 'keys_statya',]
+
+
+
+
+
+
+
+
+
+
 
 class WhoForCoursSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,56 +193,97 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = Module
         fields = ['id', 'module_num', 'description']
 
-class CoursListSerializer(serializers.ModelSerializer):
+
+
+class ProcessLearnSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cours
-        fields = ['id', 'title', 'about_description']
+        model = Process_learn
+        fields = ['id', 'number', 'title', 'description']
+
+class IntoCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntoCourse
+        fields = ['material']
+
+
 
 class CoursDetailSerializer(serializers.ModelSerializer):
     who_for_course = WhoForCoursSerializer(many=True, read_only=True)
     you_learns = YouLearnSerializer(many=True, read_only=True)
     modules = ModuleSerializer(many=True, read_only=True)
+    course_pl = ProcessLearnSerializer(many=True, read_only=True)
+    into_course = IntoCourseSerializer(many=True, read_only=True)
 
     class Meta:
         model = Cours
-        fields = ['id', 'title', 'description1', 'description2', 'description3', 'price', 'dostup_course',
-                  'modul', 'material', 'description4', 'description5', 'about_description', 'image_prepod',
-                  'full_name', 'position', 'who_for_course', 'you_learns', 'modules']
+        fields = ['id', 'title', 'description','into_course', 'description1', 'description2', 'description3', 'price', 'dostup_course',
+                  'modul', 'material', 'description4', 'description5', 'image_prepod',
+                  'full_name', 'position', 'who_for_course', 'you_learns', 'modules', 'course_pl']
+
+
+
+class CoursListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cours
+        fields = ['id', 'title', 'about_description']
+
+
+
+
+
+
+
+
 
 class MaterialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Materials
-        fields = ['id', 'name']
+        fields = ['name']
 
 class ProgrammaMasterClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgrammaMasterClass
-        fields = ['id', 'name_master']
+        fields = ['name_master']
 
 class ProcessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Process
-        fields = ['id', 'title', 'description']
+        fields = ['title', 'description']
+
+
+
+class MasterClassDetailSerializer(serializers.ModelSerializer):
+    materials = MaterialsSerializer(many=True, read_only=True)
+    programma_master_classes = ProgrammaMasterClassSerializer(many=True, read_only=True)
+    master_classes = ProcessSerializer(many=True, read_only=True)
+    class Meta:
+        model = MasterClass
+        fields = ['id', 'title', 'description', 'dostup', 'into_master', 'count_lesson', 'price', 'description_about_master_class',
+                  'image_master', 'position', 'description_process', 'materials', 'programma_master_classes', 'master_classes']
+
 
 class MasterClassListSerializer(serializers.ModelSerializer):
     class Meta:
         model = MasterClass
         fields = ['id', 'title', 'price', 'dostup']
 
-class MasterClassDetailSerializer(serializers.ModelSerializer):
-    materials = MaterialsSerializer(many=True, read_only=True)
-    programma_master_classes = ProgrammaMasterClassSerializer(many=True, read_only=True)
-    master_classes = ProcessSerializer(many=True, read_only=True)
 
+
+
+
+
+
+
+class FeedBackSerializer(serializers.ModelSerializer):
+    user = UserProfileFeedbackSerializer(many=True, read_only=True)
     class Meta:
-        model = MasterClass
-        fields = ['id', 'title', 'description', 'dostup', 'count_lesson', 'price', 'description_about_master_class',
-                  'image_master', 'position', 'description_process', 'materials', 'programma_master_classes', 'master_classes']
+        model = Feedback
+        fields = ['id', 'user', 'text', 'created_date']
 
-# class FeedBackSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = FeedBack
-#         fields = ['id', 'client_name', 'image_client', 'text', 'date']
+
+
+
+
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -183,3 +296,13 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'user', 'items']
+
+
+
+class PodpiskiSerializer(serializers.ModelSerializer):
+    tariff = TariffForCartSerializer()
+    visa_cart = VisaCartPodpiskiSerializer()
+    srok = serializers.DateField(format=('%D-%M-%Y'))
+    class Meta:
+        model = PodpiskiUser
+        fields = ['tariff', 'visa_cart', 'srok']

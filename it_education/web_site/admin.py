@@ -28,12 +28,12 @@ admin.site.register(UserProfile)
 
 class KeysInline(TranslationTabularInline,admin.TabularInline):
     model = Keys
-    extra = 1
+    extra = 0
 
 
 class Keys2Inline(TranslationTabularInline,admin.TabularInline):
     model = Keys2
-    extra = 1
+    extra = 0
 
 
 @admin.register(Statya)
@@ -51,19 +51,29 @@ class StatyaAdmin(TranslationAdmin):
 
 class WhoForCoursInline(TranslationTabularInline, admin.TabularInline):
     model = WhoForCours
-    extra = 1
+    extra = 0
 
 class YouLearnInline(TranslationTabularInline,admin.TabularInline):
     model = YouLearn
-    extra = 1
+    extra = 0
 
 class ModuleInline(TranslationTabularInline,admin.TabularInline):
     model = Module
-    extra = 1
+    extra = 0
+
+class Process_learnInlines(TranslationTabularInline, admin.TabularInline):
+    model = Process_learn
+    extra = 0
+
+
+class IntoCourseInlines(TranslationTabularInline, admin.TabularInline):
+    model = IntoCourse
+    extra = 0
+
 
 @admin.register(Cours)
 class CourseAdmin(TranslationAdmin):
-    inlines = [WhoForCoursInline, YouLearnInline, ModuleInline]
+    inlines = [WhoForCoursInline, YouLearnInline, ModuleInline, Process_learnInlines, IntoCourseInlines]
     class Media:
         js = (
             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
@@ -74,17 +84,22 @@ class CourseAdmin(TranslationAdmin):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
+
+
+
+
 class MaterialsInline(TranslationTabularInline,admin.TabularInline):
     model = Materials
-    extra = 1
+    extra = 0
 
 class ProgrammaMasterClassInline(TranslationTabularInline,admin.TabularInline):
     model = ProgrammaMasterClass
-    extra = 1
+    extra = 0
 
-class ProcessInline(admin.TabularInline):
+class ProcessInline(TranslationTabularInline, admin.TabularInline):
     model = Process
-    extra = 1
+    extra = 0
+
 
 
 @admin.register(MasterClass)
@@ -102,38 +117,35 @@ class MasterClassAdmin(TranslationAdmin):
 
 
 
+class TariffInfoInlines(TranslationTabularInline, admin.TabularInline):
+    model = TariffInfo
+    extra = 0
 
 
+@admin.register(Tariff)
+class TariffClassAdmin(TranslationAdmin):
+    inlines = [TariffInfoInlines]
+
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
 
-
+admin.site.register(VisaCart)
+admin.site.register(Feedback)
+admin.site.register(PodpiskiUser)
 admin.site.register(Cart)
 admin.site.register(CartItem)
 
-# @admin.register(FeedBack)
-# class FeedbackAdmin(TranslationAdmin):
-#     class Media:
-#         js = (
-#             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-#             'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-#             'modeltranslation/js/tabbed_translation_fields.js',
-#         )
-#         css = {
-#             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-#         }
-#
-#
-#
-#
 
 
 
-
-
-# class FeedBackAdmin(admin.ModelAdmin):
-#     list_display = ('client_name', 'date')
-#     search_fields = ('client_name',)
-#     list_filter = ('date',)
 
 # admin.site.register(Statya, StatyaAdmin)
 # admin.site.register(Cours, CourseAdmin)
