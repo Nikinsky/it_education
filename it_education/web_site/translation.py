@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
     Statya, Keys, Keys2, Cours, WhoForCours,
-    YouLearn, Module, FeedBack, MasterClass,
+    YouLearn, Module, MasterClass,
     Materials, ProgrammaMasterClass, Process
 )
 
@@ -33,10 +33,10 @@ class YouLearnTranslationOptions(TranslationOptions):
 @register(Module)
 class ModuleTranslationOptions(TranslationOptions):
     fields = ('description',)
-
-@register(FeedBack)
-class FeedBackTranslationOptions(TranslationOptions):
-    fields = ('client_name', 'text')
+#
+# @register(FeedBack)
+# class FeedBackTranslationOptions(TranslationOptions):
+#     fields = ('client_name', 'text')
 
 @register(MasterClass)
 class MasterClassTranslationOptions(TranslationOptions):

@@ -3,6 +3,86 @@ from .models import *
 
 
 
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'username', 'email', 'password', 'phone_number', 'gender_status', 'birthday', 'country', 'city', 'position']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = UserProfile.objects.create_user(**validated_data)
+        return user
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_new_password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        """
+        Проверка совпадения нового пароля и его подтверждения.
+        """
+        new_password = data.get('new_password')
+        confirm_new_password = data.get('confirm_new_password')
+
+        if new_password != confirm_new_password:
+            raise serializers.ValidationError({'confirm_new_password': 'New passwords do not match.'})
+
+        # Дополнительные проверки сложности пароля
+        if len(new_password) < 8:
+            raise serializers.ValidationError({'new_password': 'Password must be at least 8 characters long.'})
+        if not any(char.isdigit() for char in new_password):
+            raise serializers.ValidationError({'new_password': 'Password must contain at least one digit.'})
+        if not any(char.isalpha() for char in new_password):
+            raise serializers.ValidationError({'new_password': 'Password must contain at least one letter.'})
+
+        return data
+
+#
+# class ResetPasswordEmailSerializer(serializers.Serializer):
+#     email = serializers.EmailField(required=True)
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, required=True)
+
+
+class ResetPasswordEmailSerializer(serializers.ModelSerializer):
+    # email = serializers.EmailField(write_only=True)
+    class Meta:
+        model = UserProfile
+        fields = ['email']
+    def validate_email(self, value):
+        """
+        Проверка, существует ли пользователь с таким email.
+        """
+        if not UserProfile.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Пользователь с таким email не найден.")
+        return value
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, required=True, max_length=16, min_length=8)
+
+    def validate_password(self, value):
+        # Дополнительные проверки на сложность пароля (опционально)
+        if len(value) < 8:
+            raise serializers.ValidationError("Пароль должен содержать не менее 8 символов.")
+        return value
+
+
+
+
+
+
+
+
+
+
 class Keys2Serializer(serializers.ModelSerializer):
     class Meta:
         model = Keys2
@@ -87,7 +167,19 @@ class MasterClassDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'dostup', 'count_lesson', 'price', 'description_about_master_class',
                   'image_master', 'position', 'description_process', 'materials', 'programma_master_classes', 'master_classes']
 
-class FeedBackSerializer(serializers.ModelSerializer):
+# class FeedBackSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = FeedBack
+#         fields = ['id', 'client_name', 'image_client', 'text', 'date']
+
+class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FeedBack
-        fields = ['id', 'client_name', 'image_client', 'text', 'date']
+        model = CartItem
+        fields = ['course', 'master_class']
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(many=True, read_only=True)  # Для отображения связанных CartItem
+
+    class Meta:
+        model = Cart
+        fields = ['id', 'user', 'items']

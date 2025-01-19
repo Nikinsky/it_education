@@ -2,8 +2,29 @@ from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from django.contrib import admin
 from .models import *
 
+#
+# class MainPageQuestionInlines(TranslationTabularInline, admin.TabularInline):
+#     model = MainPageQuestions
+#     extra = 1
+#
+#
+# @admin.register(MainPage)
+# class MainPageAdmin(TranslationAdmin):
+#     inlines = [MainPageQuestionInlines]
+#
+#     class Media:
+#         js = (
+#             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+#             'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+#             'modeltranslation/js/tabbed_translation_fields.js',
+#         )
+#         css = {
+#             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+#         }
+#
+#
 
-
+admin.site.register(UserProfile)
 
 class KeysInline(TranslationTabularInline,admin.TabularInline):
     model = Keys
@@ -80,17 +101,34 @@ class MasterClassAdmin(TranslationAdmin):
         }
 
 
-@admin.register(FeedBack)
-class FeedbackAdmin(TranslationAdmin):
-    class Media:
-        js = (
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'modeltranslation/js/tabbed_translation_fields.js',
-        )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
+
+
+
+
+
+
+admin.site.register(Cart)
+admin.site.register(CartItem)
+
+# @admin.register(FeedBack)
+# class FeedbackAdmin(TranslationAdmin):
+#     class Media:
+#         js = (
+#             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+#             'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+#             'modeltranslation/js/tabbed_translation_fields.js',
+#         )
+#         css = {
+#             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+#         }
+#
+#
+#
+#
+
+
+
+
 
 # class FeedBackAdmin(admin.ModelAdmin):
 #     list_display = ('client_name', 'date')
